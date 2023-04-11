@@ -1,8 +1,8 @@
 streamlit
 pandas
-Tensorflow 2.7.0
+tensorflow 
 keras
-cv2
+opencv-python
 collections
 os
 subprocess
