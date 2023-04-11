@@ -175,7 +175,7 @@ def main():
     
     st.title('Video Classification Web App')
     st.write("model architecture diagram")
-    st.image("/Users/vaibhav/Downloads/VideoClassificationApp-main/Unknown-2.png", caption="video classification", width=500, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+   # st.image("/Users/vaibhav/Downloads/VideoClassificationApp-main/Unknown-2.png", caption="video classification", width=500, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
 
     uploaded_file = st.file_uploader("Choose a video...", type=["mp4", "mpeg"])
     if uploaded_file is not None:
