@@ -1,7 +1,7 @@
 streamlit
 pandas
 tensorflow 
-keras
+Keras==2.4.3
 opencv-python
 collections
 os
