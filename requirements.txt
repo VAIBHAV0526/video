@@ -7,7 +7,5 @@ tensorflow
 tensorflow-estimator
 scipy
 opencv-python
-os
 collections 
-subprocess
 time
