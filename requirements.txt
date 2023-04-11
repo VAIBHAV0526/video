@@ -5,7 +5,6 @@ tensorboard
 tensorboard-plugin-wit
 tensorflow
 tensorflow-estimator
-scipy
 opencv-python
 collections 
 time
