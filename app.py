@@ -181,22 +181,22 @@ def main():
     if uploaded_file is not None:
         #store the uploaded video locally
        
-        with open(os.path.join("/Users/vaibhav/Downloads/VideoClassificationApp-main/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
+        with open(os.path.join("VAIBHAV0526/video/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
             f.write(uploaded_file.getbuffer())
         st.success("File Uploaded Successfully")
                        
         if st.button('Classify The Video'):
             # Construct the output video path.
             st.info("started")
-            output_video_file_path = "/video/video/"+uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4"
+            output_video_file_path = "/VAIBHAV0526/video/video/"+uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4"
             with st.spinner('Wait for it...'):
-                loaded_model = keras.models.load_model("/video/LRCN_model___Date_Time_2023_04_09__07_40_33___Loss_0.45890089869499207___Accuracy_0.8808139562606812.h5")
+                loaded_model = keras.models.load_model("/VAIBHAV0526/video/convlstm_model___Date_Time_2022_06_04__01_11_42___Loss_0.8462830781936646___Accuracy_0.76.h5")
                 # Perform Action Recognition on the Test Video.
-                reusult=predict_single_action("/video/temp/"+uploaded_file.name.split("/")[-1], SEQUENCE_LENGTH,LRCN_model=loaded_model)
-                predict_on_video("/video/temp/"+uploaded_file.name.split("/")[-1], output_video_file_path, SEQUENCE_LENGTH,loaded_model)
+                reusult=predict_single_action("/VAIBHAV0526/video/temp/"+uploaded_file.name.split("/")[-1], SEQUENCE_LENGTH,LRCN_model=loaded_model)
+                predict_on_video("/VAIBHAV0526/video/video/"+uploaded_file.name.split("/")[-1], output_video_file_path, SEQUENCE_LENGTH,loaded_model)
                
                 #OpenCV’s mp4v codec is not supported by HTML5 Video Player at the moment, one just need to use another encoding option which is x264 in this case 
-                os.chdir('/video/video/')
+                os.chdir('/VAIBHAV0526/video/video')
                 subprocess.call(['ffmpeg','-y', '-i', uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4",'-vcodec','libx264','-f','mp4','output4.mp4'],shell=True)
                 st.success('Done!')
                 st.write(reusult)
@@ -216,7 +216,7 @@ def main():
             uploaded_file=None
             st.write("wait for some time")
             print(file[0:-4]+'_output1.mp4')
-            video_file = open("/video/video/"+file[0:-4]+'_output1.mp4', 'rb') #enter the filename with filepath
+            video_file = open("/VAIBHAV0526/video/video/"+file[0:-4]+'_output1.mp4', 'rb') #enter the filename with filepath
             video_bytes = video_file.read() #reading the file
             st.video(video_bytes) #displaying the video
            
