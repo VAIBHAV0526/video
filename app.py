@@ -181,7 +181,7 @@ def main():
     if uploaded_file is not None:
         #store the uploaded video locally
        
-        with open(os.path.join("VAIBHAV0526/video/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
+        with open(os.path.join("/VAIBHAV0526/video/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
             f.write(uploaded_file.getbuffer())
         st.success("File Uploaded Successfully")
                        
