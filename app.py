@@ -1,13 +1,39 @@
 import numpy as np
 import streamlit as st
-import tensorflow 
-import keras
 
+import keras
+import tensorflow 
 import cv2
 from collections import deque
 import os
 import subprocess
 import time
+st.set_page_config(layout="wide")
+
+st.markdown("""
+<style>
+.big-font {
+    font-size:100px !important;
+    color:red;
+}
+.title{
+font-size:150px !important;
+color:purple;
+}
+.modelinfo{
+font-size:50px !important;
+color:blue;
+}
+.Classification{
+font-size:30px;
+color:red;
+}
+.notice{
+font-size:20px;
+color:red;
+}
+</style>
+""", unsafe_allow_html=True)
 
 def countdown(time_sec):
     while time_sec:
@@ -26,9 +52,9 @@ def countdown(time_sec):
 IMAGE_HEIGHT , IMAGE_WIDTH = 64, 64
 
 # Specify the list containing the names of the classes used for training. Feel free to choose any set of classes.
-CLASSES_LIST = ["BaseballPitch", "Basketball", "HighJump", "HorseRace", "MilitaryParade","PlayingGuitar","ThrowDiscus","WalkingWithDog","SkateBoarding","null",]
+CLASSES_LIST = ["WalkingWithDog", "TaiChi", "Swing", "HorseRace"]
 # CLASSES_LIST.reverse()
-CLASSES_LIST.reverse()
+
 
 # Specify the number of frames of a video that will be fed to the model as one sequence.
 SEQUENCE_LENGTH = 20
@@ -94,7 +120,7 @@ def predict_on_video(video_file_path, output_file_path, SEQUENCE_LENGTH,loaded_m
             predicted_class_name = CLASSES_LIST[predicted_label]
 
         # Write predicted class name on top of the frame.
-        cv2.putText(frame, predicted_class_name, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+        cv2.putText(frame, predicted_class_name, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 255), 2)
         
         # Write The frame into the disk using the VideoWriter Object.
         video_writer.write(frame)
@@ -165,6 +191,7 @@ def predict_single_action(video_file_path, SEQUENCE_LENGTH,LRCN_model):
 
     pred=predicted_class_name
     st.write(pred)
+    st.markdown(f'<p class="big-font">{pred}</p>', unsafe_allow_html=True)
     result='Action Predicted:' +(predicted_class_name) + ' Confidence:'+ str(predicted_labels_probabilities[predicted_label])
         
     # Release the VideoCapture object. 
@@ -172,34 +199,47 @@ def predict_single_action(video_file_path, SEQUENCE_LENGTH,LRCN_model):
     return result
 def main():  
     # giving a title
-    
-    st.title('Video Classification Web App')
-    st.write("model architecture diagram")
-   # st.image("/Users/vaibhav/Downloads/VideoClassificationApp-main/Unknown-2.png", caption="video classification", width=500, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+    hide_img_fs = '''
+<style>
+button[title="View fullscreen"]{
+    visibility: hidden;}
+</style>
+'''
+
+    st.markdown( '<h1 class="title"> VIDEO CLASSIFICATION APP</h1>',unsafe_allow_html=True)
+    st.markdown( '<a   href= "https://github.com/VAIBHAV0526/Depp_learning_video_classification" class="modelinfo"> model information </a>',unsafe_allow_html=True)
+    st.markdown( '<h3 class="notice" > model train on 4 class </h3>',unsafe_allow_html=True)
+    st.markdown( '<h3  class="notice"> Walkinwithdog  Taichi Swing  horseRace </h3>',unsafe_allow_html=True)
+    st.markdown( '<h3  class="notice"> due to computation limit </h3>',unsafe_allow_html=True)
+    count=0
+    if st.button("model architecture"):
+            st.image("/Users/vaibhav/Downloads/VideoClassificationApp-main/Unknown-2.png", caption="video classification", width=500, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+            st.markdown(hide_img_fs, unsafe_allow_html=True)
+
 
     uploaded_file = st.file_uploader("Choose a video...", type=["mp4", "mpeg"])
     if uploaded_file is not None:
         #store the uploaded video locally
        
-        with open(os.path.join("/VAIBHAV0526/video/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
+        with open(os.path.join("/Users/vaibhav/Downloads/VideoClassificationApp-main/temp/",uploaded_file.name.split("/")[-1]),"wb") as f:
             f.write(uploaded_file.getbuffer())
         st.success("File Uploaded Successfully")
                        
         if st.button('Classify The Video'):
             # Construct the output video path.
             st.info("started")
-            output_video_file_path = "/VAIBHAV0526/video/video/"+uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4"
+            output_video_file_path = "/Users/vaibhav/Downloads/VideoClassificationApp-main/video/"+uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4"
             with st.spinner('Wait for it...'):
-                loaded_model = keras.models.load_model("/VAIBHAV0526/video/convlstm_model___Date_Time_2022_06_04__01_11_42___Loss_0.8462830781936646___Accuracy_0.76.h5")
+                loaded_model = keras.models.load_model("/Users/vaibhav/Downloads/VideoClassificationApp-main/convlstm_model___Date_Time_2022_06_04__01_11_42___Loss_0.8462830781936646___Accuracy_0.76.h5")
                 # Perform Action Recognition on the Test Video.
-                reusult=predict_single_action("/VAIBHAV0526/video/temp/"+uploaded_file.name.split("/")[-1], SEQUENCE_LENGTH,LRCN_model=loaded_model)
-                predict_on_video("/VAIBHAV0526/video/video/"+uploaded_file.name.split("/")[-1], output_video_file_path, SEQUENCE_LENGTH,loaded_model)
+                reusult=predict_single_action("/Users/vaibhav/Downloads/VideoClassificationApp-main/temp/"+uploaded_file.name.split("/")[-1], SEQUENCE_LENGTH,LRCN_model=loaded_model)
+                predict_on_video("/Users/vaibhav/Downloads/VideoClassificationApp-main/temp/"+uploaded_file.name.split("/")[-1], output_video_file_path, SEQUENCE_LENGTH,loaded_model)
                
                 #OpenCV’s mp4v codec is not supported by HTML5 Video Player at the moment, one just need to use another encoding option which is x264 in this case 
-                os.chdir('/VAIBHAV0526/video/video')
+                os.chdir('/Users/vaibhav/Downloads/VideoClassificationApp-main/video/')
                 subprocess.call(['ffmpeg','-y', '-i', uploaded_file.name.split("/")[-1].split(".")[0]+"_output1.mp4",'-vcodec','libx264','-f','mp4','output4.mp4'],shell=True)
                 st.success('Done!')
-                st.write(reusult)
+                st.markdown(f'<p class="Classification">{reusult}</p>', unsafe_allow_html=True)
                 
             
         #     #displaying a local video fil       
@@ -216,7 +256,7 @@ def main():
             uploaded_file=None
             st.write("wait for some time")
             print(file[0:-4]+'_output1.mp4')
-            video_file = open("/VAIBHAV0526/video/video/"+file[0:-4]+'_output1.mp4', 'rb') #enter the filename with filepath
+            video_file = open("/Users/vaibhav/Downloads/VideoClassificationApp-main/video/"+file[0:-4]+'_output1.mp4', 'rb') #enter the filename with filepath
             video_bytes = video_file.read() #reading the file
             st.video(video_bytes) #displaying the video
            
@@ -229,7 +269,7 @@ def main():
 if __name__ == '__main__':
     
     main()
-    
+st.markdown( '<footer > design and devlop by vaibhav singh </footer>',unsafe_allow_html=True)
     
     
     
