@@ -2,7 +2,7 @@ streamlit
 numpy
 Keras
 tensorflow
-opencv-python
+python3-opencv
 
 
 
